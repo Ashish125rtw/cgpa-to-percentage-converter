@@ -1,1 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CGPA to Percentage Converter</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        .converter {
+            margin-top: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+        input {
+            width: 80%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #result, #quote {
+            margin-top: 20px;
+            font-size: 20px;
+            color: #333;
+        }
+        #result span {
+            font-size: 32px;
+            font-weight: bold;
+        }
+        #quote {
+            margin-top: 10px;
+            font-size: 18px;
+            color: #555;
+        }
+        #progressBar {
+            width: 100%;
+            background-color: #f3f3f3;
+            border-radius: 5px;
+            overflow: hidden;
+            display: none;
+            margin-top: 20px;
+        }
+        #progressBar div {
+            height: 20px;
+            width: 0;
+            background-color: #007bff;
+            text-align: center;
+            line-height: 20px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SPI/CGPA/CPI to Percentage Converter for GTU</h1>
+        <div class="converter">
+            <label for="cgpa">Enter your SPI/CGPA/CPI:</label>
+            <input type="number" id="cgpa" step="0.01" min="0" max="10">
+            <button onclick="convert()">Convert</button>
+            <div id="progressBar"><div></div></div>
+            <p id="result"></p>
+            <p id="quote"></p>
+        </div>
+    </div>
+    <script>
+        function convert() {
+            let cgpa = parseFloat(document.getElementById('cgpa').value);
+            let resultElement = document.getElementById('result');
+            let quoteElement = document.getElementById('quote');
+            let progressBar = document.getElementById('progressBar');
+            let progress = progressBar.querySelector('div');
 
+            if (isNaN(cgpa) || cgpa < 0 || cgpa > 10) {
+                resultElement.textContent = "Please enter a valid CGPA between 0 and 10.";
+                quoteElement.textContent = "";
+                return;
+            }
+
+            progressBar.style.display = 'block';
+            progress.style.width = '0';
+            resultElement.textContent = '';
+            quoteElement.textContent = '';
+
+            let width = 0;
+            let interval = setInterval(function() {
+                if (width >= 100) {
+                    clearInterval(interval);
+                    progressBar.style.display = 'none';
+                    let percentage = (cgpa - 0.5) * 10;
+                    resultElement.innerHTML = `Equivalent Percentage of Marks: <span>${percentage.toFixed(2)}%</span>`;
+
+                    let quote;
+                    if (percentage >= 90) {
+                        quote = "Excellent work! Keep aiming high!";
+                    } else if (percentage >= 75) {
+                        quote = "Great job! Keep up the good work!";
+                    } else if (percentage >= 60) {
+                        quote = "Good effort! Keep pushing forward!";
+                    } else {
+                        quote = "Don't give up! Keep striving for improvement!";
+                    }
+
+                    quoteElement.textContent = quote;
+                } else {
+                    width++;
+                    progress.style.width = width + '%';
+                    progress.textContent = width + '%';
+                }
+            }, 20);
+        }
+    </script>
+</body>
+</html>
